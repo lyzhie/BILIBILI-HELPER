@@ -15,13 +15,19 @@ BILIBILI-HELPER
 
 # 工具简介
 
-这是一个利用 Linux Crontab , GitHub Action 等方式实现哔哩哔哩（Bilibili）每日自动投币，点赞，分享视频，直播签到，银瓜子兑换硬币，漫画每日签到，简单配置即可每日轻松获取 65 经验值，快来和我一起成为 Lv6 吧~~~~
+这是一个利用 Linux Crontab , GitHub Action 等方式实现哔哩哔哩（Bilibili）每日任务投币，点赞，分享视频，直播签到，银瓜子兑换硬币，漫画每日签到，简单配置即可每日轻松获取 65 经验值，快来和我一起成为 Lv6 吧~~~~
 
 **如果觉得好用，顺手点个 Star 吧 ❤**
 
 **仓库地址：[JunzhouLiu/BILIBILI-HELPER](https://github.com/JunzhouLiu/BILIBILI-HELPER)**
 
 ## 功能列表
+
+**本项目不会增加类似于自动转发抽奖，秒杀，下载版权受限视频等侵犯UP主/B站权益的功能，开发这个应用的目的是单纯的技术分享。下游分支开发者/使用者也请不要滥用相关功能。**
+
+**本项目欢迎其他开发者参与贡献，基于本工具的二次开发，使用其他语言重写都没有什么问题，能在技术上给你带来帮助和收获就很好**
+
+**请不要滥用相关API，让我们一起爱护B站 ❤**
 
 * [x] 每天上午 9 点 10 分自动开始任务。*【运行时间可自定义】*
 * [x] 哔哩哔哩漫画每日自动签到 。
@@ -35,9 +41,9 @@ BILIBILI-HELPER
 * [x] Linux用户支持自定义配置了。
 * [x] 投币策略更新可配置投币喜好。*【可配置优先给关注的up投币】*
   
-......
+[点此查看更新日志](https://github.com/JunzhouLiu/BILIBILI-HELPER/blob/main/SECURITY.md)
 
-[点击快速开始使用](#快速开始使用)
+[点击快速开始使用](#使用说明)
 
 # 目录
 
@@ -162,6 +168,29 @@ wget https://raw.githubusercontent.com/JunzhouLiu/BILIBILI-HELPER/main/setup.sh 
 ```
 BILIBILI-HELPER.jar
 config.json
+```
+
+除此之外，也可以通过点击 [BILIBILI-HELPER/release](https://github.com/JunzhouLiu/BILIBILI-HELPER/releases)，下载已发布的版本，解压后将jar包手动上传到Linux服务器，使用crontab完成定时执行。
+
+**命令格式解释：**
+
+`30 10 * * * java -jar /home/BILIBILI-HELP.jar DEDEUSERID SESSDATA BILI_JCT SCKEY>/var/log/cron.log &`
+
+| args                               | 说明                                                                                                       |
+| ---------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| 30 10 * * *                        | cron 定时时间                                                                                              |
+| java -jar                          | 执行jar包                                                                                                  |
+| /home/BILIBILI-HELP.jar            | jar包路径                                                                                                  |
+| DEDEUSERID SESSDATA BILI_JCT SCKEY | 传入参数的顺序，参数含义请见上文,SCKEY可为空（用于server酱推送日志，等同actions任务配置中的SERVERPUSHKEY） |
+| >/var/log/cron.log &               | 日志写入的路径                                                                                             |
+
+
+**命令示例：**
+
+```shell
+# *如果Cookies参数中包含特殊字符，例如`%`请使用`\`转义*
+# m h  dom mon dow   command
+30 10 * * * java -jar /home/BILIBILI-HELP.jar DEDEUSERID SESSDATA BILI_JCT >/var/log/cron.log &
 ```
 
 ### 运行效果
