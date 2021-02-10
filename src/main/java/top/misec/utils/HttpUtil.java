@@ -3,9 +3,7 @@ package top.misec.utils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.config.RequestConfig;
@@ -17,8 +15,6 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.core.Logger;
 import top.misec.login.Verify;
 
 import java.io.IOException;
@@ -103,8 +99,6 @@ public class HttpUtil {
                     HttpEntity entity = httpPostResponse.getEntity();
                     String result = EntityUtils.toString(entity);
                     resultJson = new JsonParser().parse(result).getAsJsonObject();
-                } else {
-                    log.debug(httpPostResponse.getStatusLine().toString());
                 }
             } else {
                 log.debug("httpPostResponse null");
@@ -122,12 +116,15 @@ public class HttpUtil {
     public static JsonObject doGet(String url) {
         return doGet(url, new JsonObject());
     }
+
     private static NameValuePair getNameValuePair(Map.Entry<String, JsonElement> entry) {
         return new BasicNameValuePair(entry.getKey(), Optional.ofNullable(entry.getValue()).map(Object::toString).orElse(null));
     }
+
     public static NameValuePair[] getPairList(JsonObject pJson) {
         return pJson.entrySet().parallelStream().map(HttpUtil::getNameValuePair).toArray(NameValuePair[]::new);
     }
+
     public static JsonObject doGet(String url, JsonObject pJson) {
         CloseableHttpClient httpClient = null;
         CloseableHttpResponse httpGetResponse = null;
@@ -142,7 +139,7 @@ public class HttpUtil {
             httpGet.setHeader("Connection", "keep-alive");
             httpGet.setHeader("User-Agent", userAgent);
             httpGet.setHeader("Cookie", verify.getVerify());
-            for(NameValuePair pair : getPairList(pJson)) {
+            for (NameValuePair pair : getPairList(pJson)) {
                 httpGet.setHeader(pair.getName(), pair.getValue());
             }
             // 为httpGet实例设置配置
@@ -160,7 +157,7 @@ public class HttpUtil {
                 String result = EntityUtils.toString(entity);
                 resultJson = new JsonParser().parse(result).getAsJsonObject();
             } else if (responseStatusCode == 412) {
-                log.info("出了一些问题，请在自定义配置中更换UA");
+                log.info("出了一些问题，可能是账号状态异常，如果是账号状态异常，建议先停止使用本工具");
             } else {
                 log.debug(httpGetResponse.getStatusLine().toString());
             }
